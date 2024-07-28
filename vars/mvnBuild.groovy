@@ -27,7 +27,7 @@ def call(Map buildParams) {
                 steps {
                     withMaven(maven: 'MAVEN_ENV') {
                         sh """
-                            mvn clean install '${MAVEN_BUILD_ARGS}'
+                            mvn clean install buildParams.mvnBuildArgs
                         """
                     }
                 }
