@@ -36,7 +36,9 @@ def call(Map buildParams) {
             stage('Unit tests') {
                 steps {
                     withMaven(maven: 'MAVEN_ENV') {
-                        sh "mvn clean test-compile ${MAVEN_UNIT_TEST_ARGS}"
+                         sh """
+                            mvn clean test-compile '${buildParams.mvnTestArgs}' 
+                        """
                     }
                 }
             }
@@ -44,7 +46,9 @@ def call(Map buildParams) {
             stage('Integration tests') {
                 steps {
                     withMaven(maven: 'MAVEN_ENV') {
-                        sh "mvn clean verify ${MAVEN_IT_ARGS}"
+                        sh """
+                            mvn clean verify '${buildParams.mvnITArgs}' 
+                        """
                     }
                 }
                 post {
