@@ -18,7 +18,11 @@ def call(Map buildParams) {
         }
 
         stages {
-
+            stage('Checkout code') {
+                steps {
+                    git branch: buildParams.gitBranch , url: buildParams.gitUrl
+                }
+            }
             stage('Build') {
                 steps {
                     withMaven(maven: 'MAVEN_ENV') {
