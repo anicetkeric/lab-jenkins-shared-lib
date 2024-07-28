@@ -21,7 +21,10 @@ def call(Map buildParams) {
             
             stage('Checkout code') {
                 steps {
-                    log.info "Using $buildParams"
+              script { 
+                    log.info 'Starting'
+                    log.warning 'Nothing to do!'
+                }
                     git branch: buildParams.gitBranch , url: buildParams.gitUrl
                 }
             }
