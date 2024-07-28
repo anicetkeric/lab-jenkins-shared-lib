@@ -26,7 +26,9 @@ def call(Map buildParams) {
             stage('Build') {
                 steps {
                     withMaven(maven: 'MAVEN_ENV') {
-                        sh "mvn clean install ${MAVEN_BUILD_ARGS}"
+                        sh """
+                            mvn clean install ${MAVEN_BUILD_ARGS}
+                        """
                     }
                 }
             }
