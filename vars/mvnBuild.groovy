@@ -20,8 +20,8 @@ def call(Map buildParams) {
         stages {
             
             stage('Checkout code') {
-                log.info "Using $buildParams"
                 steps {
+                    log.info "Using $buildParams"
                     git branch: buildParams.gitBranch , url: buildParams.gitUrl
                 }
             }
