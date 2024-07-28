@@ -12,15 +12,15 @@ def call(Map buildParams) {
         }
 
         environment {
-            MAVEN_BUILD_ARGS = buildParams.mvnBuildArgs
-            MAVEN_UNIT_TEST_ARGS = buildParams.mvnTestArgs
-            MAVEN_IT_ARGS = buildParams.mvnITArgs
+            MAVEN_BUILD_ARGS = '${buildParams.mvnBuildArgs}' 
+            MAVEN_UNIT_TEST_ARGS = '${buildParams.mvnTestArgs}'  
+            MAVEN_IT_ARGS = '${buildParams.mvnITArgs}'  
         }
 
         stages {
             stage('Checkout code') {
                 steps {
-                    git branch: buildParams.gitBranch , url: buildParams.gitUrl
+                    git branch: '${buildParams.gitBranch}' , url: '${buildParams.gitUrl}'
                 }
             }
             stage('Build') {
