@@ -1,10 +1,18 @@
 #!/bin/groovy
 
+import com.bootlabs.MavenLifecycle
+import com.bootlabs.Constants
+
 def call(Map buildParams) {
+
+    def mvn = new MavenLifecycle()
+
+
     pipeline {
         agent any
 
         options {
+            // Keep the 10 most recent builds
             buildDiscarder(logRotator(numToKeepStr: '25'))
             timeout(time: 10, unit: 'MINUTES')
             ansiColor('xterm')
@@ -21,32 +29,33 @@ def call(Map buildParams) {
                     git branch: buildParams.gitBranch , url: buildParams.gitUrl
                 }
             }
+
             stage('Build') {
                 steps {
-                    withMaven(maven: 'MAVEN_ENV') {
-                        sh """
-                            mvn clean install '${buildParams.mvnBuildArgs}' 
-                        """
+                    script {
+                        log.info Constants.MVN_BUILD
+                        
+                        mvn.mavenBuildGoal(buildParams.mvnBuildArgs)
                     }
                 }
             }
 
             stage('Unit tests') {
                 steps {
-                    withMaven(maven: 'MAVEN_ENV') {
-                         sh """
-                            mvn clean test-compile '${buildParams.mvnTestArgs}' 
-                        """
+                    script {
+                        log.info Constants.MVN_TEST
+
+                        mvn.mavenTestGoal(buildParams.mvnTestArgs)
                     }
                 }
             }
 
             stage('Integration tests') {
                 steps {
-                    withMaven(maven: 'MAVEN_ENV') {
-                        sh """
-                            mvn clean verify '${buildParams.mvnITArgs}' 
-                        """
+                    script {
+                        log.info Constants.MVN_IT
+                        
+                        mvn.mavenIntegrationTestGoal(buildParams.mvnITArgs)
                     }
                 }
                 post {
@@ -58,17 +67,17 @@ def call(Map buildParams) {
 
             stage('Code quality - sonar') {
                 steps {
-                    sh """
-                    echo "Running sonar Analysis"
-                """
+                 script {
+                        log.info Constants.MVN_SONAR
+                    }
                 }
             }
 
             stage('OWASP Dependency-Check Vulnerabilities') {
                 steps {
-                    sh """
-                echo "OWASP Dependency-Check Vulnerabilities"
-                """
+                 script {
+                        log.info Constants.MVN_OWASP
+                    }
                 }
             }
         }
